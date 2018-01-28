@@ -1,0 +1,75 @@
+// 외부 라이브러리를 참조해야 할 경우 사용.
+buildscript{
+    ext{
+        springBootVersion = "1.5.9.RELEASE"
+    }
+    repositories {
+        mavenCentral()
+        maven { url "http://repo.spring.io/libs-snapshot" }
+        // lombok
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+
+        // lombok
+        classpath "io.franzbecker:gradle-lombok:1.11"
+    }
+}
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'war'
+
+// lombok
+apply plugin: 'io.franzbecker.gradle-lombok'
+
+
+war {
+    baseName = 'myapp'
+    version =  '0.0.1-SNAPSHOT'
+}
+
+// 자바버전을 따라가는 듯.
+sourceCompatibility = 1.8
+
+// 레파지토리
+repositories {
+//    기본 Maven 레파지토리
+    mavenCentral()
+
+//    Bintray jCenter를 리포지토리로 추가
+//    https://bintray.com/bintray/jcenter
+    jcenter()
+
+//    기타 MAVEN 레파지토리 URL 지정
+    maven { url "http://repo.spring.io/libs-snapshot" }
+}
+
+
+dependencies {
+//    컴파일 시 라이브러리를 참조한다는 의미
+    compile("org.springframework.boot:spring-boot-starter-web")
+//    providedRuntime 는 runtime시에만 필요하고 배포시에는 제외될 dependency를 설정한다
+//    SpringBootServletInitializer 를 extends 받았을 경우 'providedRuntime' 를 사용하면 에러가 발생
+//      : Caused by: java.lang.ClassNotFoundException: javax.servlet.ServletContext
+//    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+    compile("org.springframework.boot:spring-boot-starter-tomcat")
+
+
+//    DB 연결에 사용되는 repository 모음
+    // MariaDB 연결 JDBC
+    compile group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.2.1'
+    // log4jdbc 사용 (net.sf.log4jdbc.sql.jdbcapi.DriverSpy)
+    compile group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
+    // 히카리 커넥션풀을 사용
+    compile group: 'com.zaxxer', name: 'HikariCP', version: '2.6.1'
+
+
+//    Mybatis 관련 추가된 repository
+    // SpringBoot Mybatis
+    compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '1.3.1'
+
+
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

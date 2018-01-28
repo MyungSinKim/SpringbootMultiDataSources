@@ -1,0 +1,62 @@
+# tomcat 에서 spring.profiles.active 설정(local, dev 등)에 따라 로드하는 것이 다름.
+# 기본설정
+spring:
+  profiles:
+    active: local
+
+# 개별 설정은 여기서부터.
+property:
+  hello: "안녕하세요-1111111111111"
+  message: "기본파일의 메세지"
+
+db1:
+  driver-class-name: "net.sf.log4jdbc.sql.jdbcapi.DriverSpy"
+  # "jdbc:log4jdbc:mysql:"   이라고 적어도 가능
+  url: "jdbc:log4jdbc:mariadb://localhost:3306/test1"
+  user-name: "test1"
+  password: "test1"
+  pool-name: "test1"
+  minimum-idle: 3
+  maximum-pool-size: 100
+  max-lifetime: 43200000
+  idle-timeout: 1200000
+  connection-timeout: 5000
+
+
+db2:
+  driver-class-name: "net.sf.log4jdbc.sql.jdbcapi.DriverSpy"
+  url: "jdbc:log4jdbc:mariadb://localhost:3306/test2"
+  user-name: "test2"
+  password: "test2"
+  pool-name: "test2"
+  minimum-idle: 3
+  maximum-pool-size: 100
+  max-lifetime: 43200000
+  idle-timeout: 1200000
+  connection-timeout: 5000
+
+# 서버를 다르게 구성할 때 구분값으로 사용가능.(톰캣에서 spring.profiles.active=dev 로 할 경우 아래것을 참조함)
+
+---
+
+# DEV 설정
+spring:
+  profiles: dev
+
+property:
+  hello: "안녕하세요-22222222222222"
+
+db1:
+  driver-class-name: "net.sf.log4jdbc.sql.jdbcapi.DriverSpy"
+  url: "jdbc:log4jdbc:mysql://127.0.0.1:3306/test1"
+  user-name: "test1"
+  password: "test1"
+
+
+---
+# PRD 설정
+spring:
+  profiles: prd
+
+property:
+  hello: "안녕하세요-3333"
